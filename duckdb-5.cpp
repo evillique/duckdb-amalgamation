@@ -16093,13 +16093,27 @@ void GammaFun::RegisterFunction(BuiltinFunctions &set) {
 //===--------------------------------------------------------------------===//
 // gamma
 //===--------------------------------------------------------------------===//
+#if defined(OS_DARWIN)
+extern "C"
+{
+    double lgamma_r(double x, int * signgamp);
+}
+#endif
+
+/// Use wrapper and use lgamma_r version because std::lgamma is not threadsafe.
+double lgamma_wrapper(double arg)
+{
+    int signp;
+    return lgamma_r(arg, &signp);
+}
+
 struct LogGammaOperator {
 	template <class TA, class TR>
 	static inline TR Operation(TA input) {
 		if (input == 0) {
 			throw OutOfRangeException("cannot take log gamma of zero");
 		}
-		return std::lgamma(input);
+		return lgamma_wrapper(input);
 	}
 };
 

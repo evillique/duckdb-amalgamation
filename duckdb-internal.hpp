@@ -11791,7 +11791,7 @@ using string_view = basic_string_view<char>;
 using wstring_view = basic_string_view<wchar_t>;
 
 // A UTF-8 code unit type.
-#if __has_cpp_attribute(__cpp_char8_t)
+#if __cpp_char8_t
 typedef char8_t fmt_char8_t;
 #else
 typedef unsigned char fmt_char8_t;
